@@ -1,0 +1,220 @@
+
+<html>
+<title>Assignment2 PART B - 170104122 - C1 - Fairuz Nawar</title>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=_WwpvdapcZjQ7iFIWIwXD5YVlMjZdCt671hsBZSLCEqxeen7P562PGJQTlztSYl-U4FIjPyFD5ntOajeHs-wmkRtAgoZKmPwIbGy_s0Pt-oPCB8QWGjg0460olOxdnbFWwEUTJyycWB-oFTXCw_Tq3Nls0UGmgoCjgnI6Gx-mDQDRJrIsXtWQfInJTVeVKkGufzp-32XBmO9hdNrmElUZajUixnSAj2ivqXFjQ1siovGU6t3yyHDtkecR1ljfLZHc6UjkCz_SCoKOzvHdH_p3f6hwPBERqY7tU20J21jRrFYmMlwoBr9HIsIlB8iThD4dezWxmJAkuDu_dIBY61JvQ" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jZG4uZmJzYnguY29tL3YvdDU5LjI3MDgtMjEvMTM4MjU4NzM5XzI1NDE0MTA0OTYwNzkzMF82OTI4MzY0MDg0MjA1MjYwNjhfbi5odG1sL1R1bmFfZmluYWwuaHRtbD9fbmNfY2F0PTEwMSZjY2I9MiZfbmNfc2lkPTBjYWIxNCZfbmNfb2hjPTNNMXF1bDV4T0R3QVg5ZFdLMEkmX25jX2h0PWNkbi5mYnNieC5jb20mb2g9YTMzNmRhOGQwNTI1NzVmNDQ1YzlhN2U2ODNjMGJhNTkmb2U9NjAwRTBCRTgmZGw9MQ"/><canvas id="webglcanvas" width="600" height="600"></canvas>
+<canvas  id="webglcanvas" width="800" height="500"></canvas>
+<script>
+
+    var canvas = document.getElementById("webglcanvas"); 
+    var  gl = canvas.getContext("webgl");
+    
+    var vertexShaderSource =
+       `attribute vec3 a_coords;
+	    attribute vec3 a_colors;
+	    uniform float u_shift;
+		varying vec3 v_color;
+        void main() {
+            gl_Position = vec4(a_coords.x + u_shift, a_coords.y, a_coords.z, 1.0);
+			v_color = a_colors;
+        }`;
+
+
+    var fragmentShaderSource =
+      `precision mediump float;
+       varying vec3 v_color;
+	   void main() {
+            gl_FragColor = vec4(v_color, 1.0);
+        }`;
+    
+    var vsh = gl.createShader( gl.VERTEX_SHADER );
+    gl.shaderSource( vsh, vertexShaderSource );
+    gl.compileShader( vsh );
+
+    var fsh = gl.createShader( gl.FRAGMENT_SHADER );
+    gl.shaderSource( fsh, fragmentShaderSource );
+    gl.compileShader( fsh );
+    
+    var prog = gl.createProgram(); 
+    
+    gl.attachShader( prog, vsh ); 
+    gl.attachShader( prog, fsh );
+    gl.linkProgram( prog ); 
+    gl.useProgram(prog); 
+
+    var a_coords_location = gl.getAttribLocation(prog, "a_coords"); 
+
+    var coords = new Float32Array( [-0.5, 0.3,   0.0, //Beak
+									-0.3, 0.38, 0.0,
+                                    -0.3, 0.3,    0.0,
+									
+									
+									-0.3, 0.3,    0.0, //Head1
+									-0.3, 0.38, 0.0,
+									-0.19, 0.45, 0.0,
+									
+									-0.3, 0.3,    0.0, //Head2
+									-0.19, 0.45, 0.0,
+									-0.12, 0.34, 0.0,
+									
+									-0.3, 0.3,    0.0, //Head2
+									-0.19, 0.06, 0.0,
+									-0.12, 0.34, 0.0,
+									
+									-0.19, 0.06, 0.0,
+									-0.3, 0.3,    0.0,
+									-0.46, -0.2,   0.0,
+									
+									-0.19, 0.06, 0.0,
+									-0.46, -0.2,   0.0,
+									-0.09, -0.45,    0.0,
+									
+									-0.09, -0.45,    0.0,
+									-0.19, 0.06, 0.0,
+									0.3, -0.03,    0.0,
+									
+									-0.09, -0.45,    0.0,
+									0.6, -0.3, 0.0,
+									0.3, -0.03,    0.0,
+									
+									-0.095, -0.44,    0.0,
+									-0.1, -0.61,    0.0,
+									-0.04, -0.64,    0.0,
+									
+									-0.1, -0.61,    0.0,
+									-0.04, -0.64,    0.0,
+									-0.33, -0.63,    0.0,
+									
+									0.1, 0.5,    0.0,//star1
+									0.125, 0.55,    0.0,
+									0.15, 0.5,    0.0,
+									
+									0.1, 0.53,    0.0,//star1
+									0.125, 0.48,    0.0,
+									0.15, 0.53,    0.0,
+									
+									0.6, 0.8,    0.0,//star2
+									0.625, 0.75,    0.0,
+									0.65, 0.8,    0.0,
+									
+									0.6, 0.77,    0.0,//star2
+									0.625, 0.82,    0.0,
+									0.65, 0.77,    0.0,
+									
+									
+									-0.6, 0.7,    0.0,//star3
+									-0.625, 0.65,    0.0,
+									-0.65, 0.7,    0.0,
+									
+									-0.6, 0.67,    0.0,//star3
+									-0.625, 0.72,    0.0,
+									-0.65, 0.67,    0.0,
+									
+									] );
+
+    var a_coords_buffer = gl.createBuffer(); 
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, a_coords_buffer); 
+    gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW); 
+    gl.vertexAttribPointer(a_coords_location, 3 , gl.FLOAT, false, 0, 0); 
+    gl.enableVertexAttribArray(a_coords_location); 
+	
+	var u_shift_location = gl.getUniformLocation(prog, "u_shift");
+	var shift = 0.0;
+	gl.uniform1f(u_shift_location, shift);
+	
+	a_colors_location = gl.getAttribLocation(prog, "a_colors");
+    var colors = new Float32Array( [
+	0.97 , 0.88 , 0.60 ,
+	0.97 , 0.88 , 0.60 ,
+	0.97 , 0.88 , 0.60 ,
+
+	
+	0.49 , 0.84 , 0.68 ,
+	0.49 , 0.84 , 0.68 ,
+	0.49 , 0.84 , 0.68 ,
+									
+0.40 , 0.67 , 0.55 ,
+0.40 , 0.67 , 0.55 ,
+0.40 , 0.67 , 0.55 ,
+									
+0.15 , 0.51 , 0.45 ,
+0.15 , 0.51 , 0.45 ,
+0.15 , 0.51 , 0.45 ,
+									
+0.67 , 0.31 , 0.26 ,
+0.67 , 0.31 , 0.26 ,
+0.67 , 0.31 , 0.26 ,
+									
+0.49 , 0.24 , 0.20 ,
+0.49 , 0.24 , 0.20 ,
+0.49 , 0.24 , 0.20 ,
+									
+0.53 , 0.47 , 0.40 ,
+0.53 , 0.47 , 0.40 ,
+0.53 , 0.47 , 0.40 ,
+									
+0.75 , 0.73 , 0.67 ,
+0.75 , 0.73 , 0.67 ,
+0.75 , 0.73 , 0.67 ,
+									
+0.76 , 0.36 , 0.23 ,
+0.76 , 0.36 , 0.23 ,
+0.76 , 0.36 , 0.23 ,
+
+0.76 , 0.36 , 0.23 ,
+0.76 , 0.36 , 0.23 ,
+0.76 , 0.36 , 0.23 ,
+
+0.22 , 0.27 , 0.32 ,
+0.22 , 0.27 , 0.32 ,
+0.22 , 0.27 , 0.32 ,
+
+0.22 , 0.27 , 0.32 ,
+0.22 , 0.27 , 0.32 ,
+0.22 , 0.27 , 0.32 ,
+
+									] );
+	
+	var a_colors_buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, a_colors_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(a_colors_location, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_colors_location);	
+    
+	
+    gl.clearColor(0.90 , 1.00 , 0.71, 0.8);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+	gl.drawArrays(gl.TRIANGLES, 0, 219); 
+	
+
+	document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 37:
+            shift = shift - 0.1;
+			gl.uniform1f(u_shift_location, shift);
+			gl.clearColor(0.90 , 1.00 , 0.71, 1.0);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gl.drawArrays(gl.TRIANGLES, 0, 219); 
+            break;
+        case 38:
+            alert('Press left or right arrow to move the Duck');
+            break;
+        case 39:
+            shift = shift + 0.1;
+			gl.uniform1f(u_shift_location, shift);
+			gl.clearColor(0.54 , 0.82 , 0.78 , 0.8);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			gl.drawArrays(gl.TRIANGLES, 0, 219); 
+            break;
+        case 40:
+             alert('Press left or right arrow to move the Duck');
+            break;
+    }
+};
+
+
+</script>
+
+
+
+</html>
